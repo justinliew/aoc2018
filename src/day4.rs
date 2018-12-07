@@ -28,7 +28,6 @@ fn check_overlaps(list: &Vec<Time>) {
     let mut i = 0;
     while i < list.len()-1 {
         for t in list[i].min..list[i+1].min {
-            print!("{} ", t);
             minutes[t as usize] += 1;
         }
         println!("");
@@ -36,10 +35,14 @@ fn check_overlaps(list: &Vec<Time>) {
     }
 
     let mut i = 0;
+    let max_mins = 0;
     for m in minutes.iter() {
-        println!("{} - {}", i, m);
+        if m > max_mins {
+            max_mins = m;
+        }
         i += 1;
     }
+    println!("Guard {}, Max Mins {}")
 }
 
 pub fn entry() {
@@ -103,28 +106,33 @@ pub fn entry() {
         }
     }
 
-    let mut max_guard_id = 0;
-    let mut max_guard_time = 0;
     for (guard,list) in &guards {
-        let mut guard_time = 0;
         let mut i = 0;
-        if list.len () > 0 {
-            while i < list.len()-1 {
-                guard_time += list[i+1].min - list[i].min;
-                i += 2;
-            }
-        }
-        if guard_time > max_guard_time {
-            max_guard_id = *guard;
-            max_guard_time = guard_time;
-        }
+        check_overlaps(&list);
     }
-    println!("Guard id {} TIme {}", max_guard_id, max_guard_time);
 
-    match guards.get(&max_guard_id) {
-        Some(list) => {
-            check_overlaps(&list);
-        },
-        None => {},
-    }
+    // let mut max_guard_id = 0;
+    // let mut max_guard_time = 0;
+    // for (guard,list) in &guards {
+    //     let mut guard_time = 0;
+    //     let mut i = 0;
+    //     if list.len () > 0 {
+    //         while i < list.len()-1 {
+    //             guard_time += list[i+1].min - list[i].min;
+    //             i += 2;
+    //         }
+    //     }
+    //     if guard_time > max_guard_time {
+    //         max_guard_id = *guard;
+    //         max_guard_time = guard_time;
+    //     }
+    // }
+    // println!("Guard id {} TIme {}", max_guard_id, max_guard_time);
+
+    // match guards.get(&max_guard_id) {
+    //     Some(list) => {
+    //         check_overlaps(&list);
+    //     },
+    //     None => {},
+    // }
 } 
