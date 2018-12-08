@@ -22,7 +22,10 @@ enum EntryType {
     Wake(),
 }
 
-fn check_overlaps(list: &Vec<Time>) {
+fn check_overlaps(guard: &i32, list: &Vec<Time>) {
+    if list.len() == 0 {
+        return
+    }
     let mut minutes : [i32; 60] = [0; 60];
 
     let mut i = 0;
@@ -30,19 +33,20 @@ fn check_overlaps(list: &Vec<Time>) {
         for t in list[i].min..list[i+1].min {
             minutes[t as usize] += 1;
         }
-        println!("");
         i += 2;
     }
 
     let mut i = 0;
-    let max_mins = 0;
+    let mut max_mins = 0;
+    let mut max_mins_time = 0;
     for m in minutes.iter() {
-        if m > max_mins {
-            max_mins = m;
+        if m > &max_mins {
+            max_mins = *m;
+            max_mins_time = i;
         }
         i += 1;
     }
-    println!("Guard {}, Max Mins {}")
+    println!("Guard {} hax max minutes {} answer {}", guard, max_mins, guard * max_mins_time);
 }
 
 pub fn entry() {
@@ -107,8 +111,7 @@ pub fn entry() {
     }
 
     for (guard,list) in &guards {
-        let mut i = 0;
-        check_overlaps(&list);
+        check_overlaps(&guard,&list);
     }
 
     // let mut max_guard_id = 0;
