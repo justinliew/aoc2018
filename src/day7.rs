@@ -38,23 +38,35 @@ pub fn entry() {
 
     println!("Frontier: {:?}", frontier);
 
+    let mut index = 0;
     loop {
         frontier.sort_unstable_by(|a, b| b.cmp(a));
         frontier.dedup();
-        let front = frontier.pop();
-        if let Some(v) = front {
-            let d = depcount.entry(v).or_insert(1);
-            *d -= 1;
-            println!("Testing push of  {} - {}", v, *d);
+        let front = frontier[frontier.len()-1-index];
+        println!("Testing {}", front);
+        if let Some(d) = depcount.get(&front) {
             if *d <= 0 {
-                order.push(v);
-                if let Entry::Occupied(mut o) = graph.entry(v) {
-                    let mut copy = o.get_mut();
-                    println!("Appending {:?}", copy);
-                    frontier.append(copy);
-                }
+                println!("Adding {} to list", front);
+                order.push(front);
+                frontier.pop();
+                index = 0;
             } else {
-                frontier.push(v);
+                index += 1;
+            }
+        } else {
+            println!("Adding {} to list", front);
+            order.push(front);
+            frontier.pop();
+            index = 0;
+        }
+        if let Entry::Occupied(o) = graph.entry(front) {
+            let copy = o.get();
+            for c in copy {
+                if let Entry::Occupied(mut d) = depcount.entry(*c) {
+                    let mut dcopy = d.get_mut();
+                    *dcopy -= 1;
+                }
+                frontier.push(*c);
             }
         }
 
