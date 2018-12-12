@@ -1,5 +1,5 @@
 pub fn entry() {
-    let serial = 18;//1723;
+    let serial = 1723;
 
     const MAX : usize = 300;
     let mut grid : [[i32; MAX]; MAX] = [[0 ; MAX]; MAX];
@@ -34,9 +34,9 @@ pub fn entry() {
                     max_x = x+1;
                     max_y = y+1;
                     max_s = s;
+                    println!("New Max {} {}x{}x{}", s, max_x, max_y,max_s);
                 }
             }
         }
     }
-    println!("Max {} {}x{}x{}", max, max_x, max_y,max_s);
 }
