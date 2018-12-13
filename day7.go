@@ -22,6 +22,83 @@ func SliceUniqMap(s []string) []string {
 	return s[:j]
 }
 
+func partOne(frontier []string ,graph map[string][]string,deps map[string][]string) {
+	var output []string
+	for ;len(frontier) > 0;{
+		frontier = SliceUniqMap(frontier)
+		sort.Strings(frontier)
+		log.Printf("Frontier is %v", frontier)
+		found := false
+		for findIndex := 0; !found;findIndex = findIndex + 1 {
+			candidate := frontier[findIndex]
+			d,ok := deps[candidate]
+			if !ok || len(d) == 0 {
+				log.Printf("Adding %s", candidate)
+				output = append(output,candidate)
+				for _,removeDep := range graph[candidate] {
+					for dIndex := range deps[removeDep] {
+						if deps[removeDep][dIndex] == candidate {
+							deps[removeDep] = append(deps[removeDep][:dIndex],deps[removeDep][dIndex+1:]...)
+							break
+						}
+					}
+				}
+				frontier = append(frontier[:findIndex],frontier[findIndex+1:]...)
+				frontier = append(frontier,graph[candidate]...)
+				findIndex = 0
+				found = true
+			}
+		}
+	}
+	log.Printf("%v", output)
+}
+
+func findNextCandidate() string {
+	found := false
+	for findIndex := 0; !found;findIndex = findIndex + 1 {
+		candidate := frontier[findIndex]
+		d,ok := deps[candidate]
+		if !ok || len(d) == 0 {
+			return candidate
+		}
+	}
+}
+
+func runUntilCandidateFinishes() {
+
+}
+
+func partTwo(frontier []string ,graph map[string][]string,deps map[string][]string) {
+	var output []string
+	for ;len(frontier) > 0;{
+		frontier = SliceUniqMap(frontier)
+		sort.Strings(frontier)
+		log.Printf("Frontier is %v", frontier)
+		found := false
+		for findIndex := 0; !found;findIndex = findIndex + 1 {
+			candidate := frontier[findIndex]
+			d,ok := deps[candidate]
+			if !ok || len(d) == 0 {
+				log.Printf("Adding %s", candidate)
+				output = append(output,candidate)
+				for _,removeDep := range graph[candidate] {
+					for dIndex := range deps[removeDep] {
+						if deps[removeDep][dIndex] == candidate {
+							deps[removeDep] = append(deps[removeDep][:dIndex],deps[removeDep][dIndex+1:]...)
+							break
+						}
+					}
+				}
+				frontier = append(frontier[:findIndex],frontier[findIndex+1:]...)
+				frontier = append(frontier,graph[candidate]...)
+				findIndex = 0
+				found = true
+			}
+		}
+	}
+	log.Printf("%v", output)
+}
+
 func main() {
 	file, err := os.Open("day7.txt")
 	if err != nil {
@@ -56,33 +133,6 @@ func main() {
 			frontier = append(frontier,k)
 		}
 	}
-	
-	var output []string
-	for ;len(frontier) > 0;{
-		frontier = SliceUniqMap(frontier)
-		sort.Strings(frontier)
-		log.Printf("Frontier is %v", frontier)
-		found := false
-		for findIndex := 0; !found;findIndex = findIndex + 1 {
-			candidate := frontier[findIndex]
-			d,ok := deps[candidate]
-			if !ok || len(d) == 0 {
-				log.Printf("Adding %s", candidate)
-				output = append(output,candidate)
-				for _,removeDep := range graph[candidate] {
-					for dIndex := range deps[removeDep] {
-						if deps[removeDep][dIndex] == candidate {
-							deps[removeDep] = append(deps[removeDep][:dIndex],deps[removeDep][dIndex+1:]...)
-							break
-						}
-					}
-				}
-				frontier = append(frontier[:findIndex],frontier[findIndex+1:]...)
-				frontier = append(frontier,graph[candidate]...)
-				findIndex = 0
-				found = true
-			}
-		}
-	}
-	log.Printf("%v", output)
+//	partOne(frontier,graph,deps)
+	partTwo(frontier,graph,deps)
 }
